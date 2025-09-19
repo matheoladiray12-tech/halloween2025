@@ -27,12 +27,8 @@
     }
 
     @keyframes flicker {
-      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
-        opacity: 1;
-      }
-      20%, 24%, 55% {
-        opacity: 0.5;
-      }
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+      20%, 24%, 55% { opacity: 0.5; }
     }
 
     .bat {
@@ -95,6 +91,10 @@
       color: white;
     }
 
+    #loginContainer {
+      margin-top: 50px;
+    }
+
     #muteBtn {
       margin-top: 20px;
       padding: 10px 20px;
@@ -134,8 +134,21 @@
   <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/Bat_silhouette.svg" width="60" class="bat" style="animation-delay:4s;">
   <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/Bat_silhouette.svg" width="100" class="bat" style="animation-delay:8s;">
 
-  <!-- Formulaire de participation -->
-  <form action="https://formsubmit.co/matheo.ladiray12@gmail.com" method="POST">
+  <!-- Connexion -->
+  <div id="loginContainer">
+    <form id="loginForm">
+      <label>ID :</label>
+      <input type="text" id="userId" required>
+
+      <label>Mot de passe :</label>
+      <input type="password" id="password" required>
+
+      <button type="submit">Se connecter</button>
+    </form>
+  </div>
+
+  <!-- Formulaire caché -->
+  <form id="halloweenForm" style="display:none;">
     <label>Nom :</label>
     <input type="text" name="nom" required>
 
@@ -158,7 +171,7 @@
   </audio>
 
   <script>
-    // Date de la soirée (31 octobre à 21h)
+    // Compte à rebours
     const eventDate = new Date("October 31, 2025 21:00:00").getTime();
     const countdown = document.getElementById("countdown");
 
@@ -179,19 +192,45 @@
       countdown.innerHTML = `${days}j ${hours}h ${minutes}m ${seconds}s`;
     }, 1000);
 
-    // Gestion du bouton mute
+    // Gestion du mute
     const bgMusic = document.getElementById("bgMusic");
     const muteBtn = document.getElementById("muteBtn");
-
     muteBtn.addEventListener("click", () => {
-      if (bgMusic.muted) {
-        bgMusic.muted = false;
-        muteBtn.textContent = "🔊 Couper le son";
+      bgMusic.muted = !bgMusic.muted;
+      muteBtn.textContent = bgMusic.muted ? "🔈 Remettre le son" : "🔊 Couper le son";
+    });
+
+    // Connexion
+    const loginForm = document.getElementById("loginForm");
+    const loginContainer = document.getElementById("loginContainer");
+    const halloweenForm = document.getElementById("halloweenForm");
+
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const id = document.getElementById("userId").value;
+      const mdp = document.getElementById("password").value;
+
+      if(id === "matheo" && mdp === "321224") {
+        alert("Connexion réussie !");
+        loginContainer.style.display = "none";
+        halloweenForm.style.display = "block";
       } else {
-        bgMusic.muted = true;
-        muteBtn.textContent = "🔈 Remettre le son";
+        alert("ID ou mot de passe incorrect !");
       }
+    });
+
+    // Formulaire Halloween (simple mailto)
+    halloweenForm.addEventListener("submit", function(e){
+      e.preventDefault();
+      const nom = halloweenForm.nom.value;
+      const prenom = halloweenForm.prenom.value;
+      const participation = halloweenForm.participation.value;
+
+      const mailtoLink = `mailto:matheo.ladiray12@gmail.com?subject=Participation%20Soirée%20Halloween&body=Nom:%20${encodeURIComponent(nom)}%0APrénom:%20${encodeURIComponent(prenom)}%0AParticipe:%20${encodeURIComponent(participation)}`;
+
+      window.location.href = mailtoLink;
     });
   </script>
 </body>
 </html>
+
